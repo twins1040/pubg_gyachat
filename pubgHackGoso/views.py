@@ -1,6 +1,9 @@
+import os
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from .models import Player, Item, PlayerItem, MatchChecked
 
 from pubg_python import PUBG, Shard
 from pubg_python.exceptions import NotFoundError
@@ -24,16 +27,22 @@ def search_player(request, shard, player_name):
         if s.value == shard:
             shardEnum = s
 
-    api = PUBG('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0NmEwOGE2MC03MDc2LTAxMzYtOTNmMS0wNDk5NWRmYzQ5Y2EiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTMyMzMwMjAzLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6ImJhdHRsZXJhZGFyIn0.AE8Q2-3vwrpWrKlLS43ezcucpZN9Eq0rFG654q6PKmw', shardEnum)
+    with open(os.path.join(os.getcwd(), 'token'), 'r') as f:
+            api = PUBG(f.read()[:-1], shardEnum)
 
     try:
         players = api.players().filter(player_names=[player_name])
         for player in players:
             player_id = player.id
+        Player.objects.get(player_id=player_id)
     except NotFoundError:
         response = "Name error"
         return HttpResponse(response)
-    else:
-        return HttpResponseRedirect(reverse('pubg_gyachat:closet',args=(player_id,)))
+    except Player.DoesNotExist:
+        p = Player(player_id=player_id, player_name=player_name, count=0)
+        p.save()
+        print('player '+player_name+' is registered')
+
+    return HttpResponseRedirect(reverse('pubg_gyachat:closet',args=(player_id,)))
 
 
