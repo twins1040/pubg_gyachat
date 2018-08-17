@@ -1,4 +1,5 @@
 from django.db import models
+from pubg_python import Shard
 
 # Create your models here.
 class Item(models.Model):
@@ -11,7 +12,14 @@ class Item(models.Model):
 class Player(models.Model):
     player_id = models.CharField(max_length=200, primary_key=True)
     player_name = models.CharField(max_length=200)
+    shard = models.CharField(max_length=200, null=True)
     count = models.IntegerField()
+
+    def get_shard(self):
+        for s in Shard:
+            if s.value == self.shard:
+                return s
+        return -1
 
     def __str__(self):
         return self.player_name

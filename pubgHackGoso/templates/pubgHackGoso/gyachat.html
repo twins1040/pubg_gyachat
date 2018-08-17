@@ -1,0 +1,10 @@
+Player id : {{player_id}}<br/>
+Player name : {{api_player.name}}<br/>
+Count : {{count}}<br/>
+<form action="{% url 'pubg_gyachat:upcount' player_id %}" method="post">
+{% csrf_token %}
+{% for match in api_player.matches %}
+    {{match.id}}
+    <button name="match" id="match{{forloop.counter}}" value="{{match.id}}"/>Get</button><br/>
+{% endfor %}
+</form>    
