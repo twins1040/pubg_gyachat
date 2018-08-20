@@ -1,20 +1,20 @@
 import os
 from random import randrange
 
-from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.template import loader
 
 from .models import Player, Item, PlayerItem, MatchChecked
+from .forms import SearchPlayerForm
 
 from pubg_python import PUBG, Shard
 from pubg_python.exceptions import NotFoundError
 
-# Create your views here.
 def index(request):
-    return HttpResponse("hello! Enter search/pc-kakao/your-nick-name")
+    form = SearchPlayerForm()
+    return render(request, 'pubgHackGoso/index.html', {'form': form})
 
 def closet(request, player_id):
     return HttpResponse("hello! your id is " + player_id)
