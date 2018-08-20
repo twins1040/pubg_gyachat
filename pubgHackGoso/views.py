@@ -63,14 +63,12 @@ def shoot(request, player_id):
 
     return HttpResponseRedirect(reverse('pubg_gyachat:gyachat', args=(player_id,)))
 
-def search_player(request, shard, player_name):
-    shardEnum = ""
-    for s in Shard:
-        if s.value == shard:
-            shardEnum = s
+def search_player(request):
+    shard = request.GET['shard']
+    player_name = request.GET['player_name']
 
     with open(os.path.join(os.getcwd(), 'token'), 'r') as f:
-            api = PUBG(f.read()[:-1], shardEnum)
+            api = PUBG(f.read()[:-1], Shard[shard])
 
     try:
         players = api.players().filter(player_names=[player_name])

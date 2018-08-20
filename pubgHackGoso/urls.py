@@ -9,5 +9,5 @@ urlpatterns = [
     path('players/<player_id>/gyachat/', views.gyachat, name='gyachat'),
     path('players/<player_id>/gyachat/upcount/', views.upcount, name='upcount'),
     path('players/<player_id>/gyachat/shoot/', views.shoot, name='shoot'),
-    path('search/<shard>/<player_name>/', views.search_player, name='search'),
+    path('search/', views.search_player, name='search'),
 ]
