@@ -1,4 +1,5 @@
 import os
+from random import randrange
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -49,7 +50,18 @@ def upcount(request, player_id):
     return HttpResponseRedirect(reverse('pubg_gyachat:gyachat', args=(player_id,)))
 
 def shoot(request, player_id):
-    return HttpResponse("shoot! your id is " + player_id)
+    player = get_object_or_404(Player, pk=player_id)
+    if player.count > 0:
+        number_item = Item.objects.count()
+        item_get = randrange(0, number_item)
+        item_object = Item.objects.all()[item_get]
+
+        record = PlayerItem(player_id=player, item_id=item_object)
+        record.save()
+        player.count -= 1
+        player.save()
+
+    return HttpResponseRedirect(reverse('pubg_gyachat:gyachat', args=(player_id,)))
 
 def search_player(request, shard, player_name):
     shardEnum = ""
