@@ -1,0 +1,6 @@
+{% for pi in items %}
+    {{item.name}} {{item.image}}<br/>
+{% endfor %}
+<form action="{% url 'pubg_gyachat:gyachat' player_id %}">
+	<input type="submit" value="gyachat"/>
+</form>

@@ -17,7 +17,12 @@ def index(request):
     return render(request, 'pubgHackGoso/index.html', {'form': form})
 
 def closet(request, player_id):
-    return HttpResponse("hello! your id is " + player_id)
+    player = get_object_or_404(Player, pk=player_id)
+    player_items = player.playeritem_set.all()
+    items = [i.item_id for i in player_items]
+    context = {'player_id' : player_id,
+               'items' : items}
+    return render(request, 'pubgHackGoso/closet.html', context)
 
 def gyachat(request, player_id):
     player = get_object_or_404(Player, pk=player_id)
